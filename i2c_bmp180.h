@@ -7,8 +7,9 @@
 
 #define BMP180_ADDRESS   0xee 
 #define CONVERSION_TIME 5
-#define CTRL_REG_ADD 0xf4
-#define DATA_REG 0xf6
+#define BMP180_CTRL_REG 0xf4
+#define BMP180_DATA_REG 0xf6
+#define BMP180_VERSION_REG 0xd1
 
 #define BMP_CMD_MEASURE_TEMP       (0x2E) // Max conversion time 4.5ms
 #define BMP_CMD_MEASURE_PRESSURE_0 (0x34) // Max conversion time 4.5ms (OSS = 0)
@@ -25,6 +26,6 @@ enum {
 };
 
 uint32_t BMP180_GetVal(uint8_t mode);
-void BMP180_Init(void);
+bool BMP180_Init(void);
 
 #endif

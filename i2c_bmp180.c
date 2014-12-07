@@ -50,7 +50,7 @@ BMP180_readRawValue(uint8_t cmd) {
     i2c_stop();
     return(0);
   }
-  i2c_writeByte(CTRL_REG_ADD);	          	
+  i2c_writeByte(BMP180_CTRL_REG);	          	
   if(!i2c_check_ack()){
     //os_printf("slave not ack..\n return \n");
     i2c_stop();
@@ -64,7 +64,7 @@ BMP180_readRawValue(uint8_t cmd) {
   }
   i2c_stop();                   			
   os_delay_us(CONVERSION_TIME*1000);
-  int16_t res = BMP180_readRegister16(DATA_REG);
+  int16_t res = BMP180_readRegister16(BMP180_DATA_REG);
   return res;
 }
 
@@ -80,15 +80,15 @@ BMP180_GetVal(uint8_t mode)
   
   UT = BMP180_readRawValue(BMP_CMD_MEASURE_TEMP);
   UP = BMP180_readRawValue(BMP_CMD_MEASURE_PRESSURE_0);
-  
+
   X1 = (UT - (int32_t)ac6) * ((int32_t)ac5) >> 15;
-  X2 = ((int32_t)mc << 11) / (X1 + (int32_t)md);  
+  X2 = ((int32_t)mc << 11) / (X1 + (int32_t)md); 
   B5 = X1 + X2;
   T  = (B5+8) >> 4;
 
   if(mode==GET_BMP_TEMPERATURE)
-    return T;
-    
+    return (T);
+   
   B6 = B5 - 4000;
   X1 = ((int32_t)b2 * ((B6 * B6) >> 12)) >> 11;
   X2 = ((int32_t)ac2 * B6) >> 11;
@@ -118,9 +118,12 @@ BMP180_GetVal(uint8_t mode)
     return (int32_t)(pow(((float)MYALTITUDE/44330)+1,5.255F)*P);
 }
 
-void ICACHE_FLASH_ATTR
+bool ICACHE_FLASH_ATTR
 BMP180_Init()
 {
+  if (!BMP180_readRegister16(BMP180_VERSION_REG))
+    return 0;
+
   ac1 = BMP180_readRegister16(0xAA);				 
   ac2 = BMP180_readRegister16(0xAC);
   ac3 = BMP180_readRegister16(0xAE);
@@ -132,5 +135,7 @@ BMP180_Init()
   mb =  BMP180_readRegister16(0xBA);
   mc =  BMP180_readRegister16(0xBC);
   md =  BMP180_readRegister16(0xBE);
+  
+  return 1;
 }
 
