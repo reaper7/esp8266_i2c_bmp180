@@ -86,7 +86,7 @@ BMP180_GetVal(uint8_t mode)
   B5 = X1 + X2;
   T  = (B5+8) >> 4;
 
-  if(mode==0)
+  if(mode==GET_BMP_TEMPERATURE)
     return T;
     
   B6 = B5 - 4000;
@@ -111,10 +111,10 @@ BMP180_GetVal(uint8_t mode)
   X2 = (-7357 * P) >> 16;
   P = P + ((X1 + X2 + (int32_t)3791) >> 4);
   
-  if(mode==1)
+  if(mode==GET_BMP_REAL_PRESSURE)
     return P;
     
-  if(mode>=2)
+  if(mode>=GET_BMP_RELATIVE_PRESSURE)
     return (int32_t)(pow(((float)MYALTITUDE/44330)+1,5.255F)*P);
 }
 
