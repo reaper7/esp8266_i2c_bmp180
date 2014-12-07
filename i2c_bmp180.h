@@ -18,9 +18,13 @@
 
 #define MYALTITUDE  153.0
 
-int16_t BMP180_readRegister16(uint8_t reg);
-int16_t BMP180_readRawValue(uint8_t cmd);
-uint32_t BMP180_GetVal(uint8_t mode); //0->temperature; 1->real pressure; 2->sealevel pressure
+enum {
+    GET_TEMPERATURE = 0,
+    GET_REAL_PRESSURE,
+    GET_RELATIVE_PRESSURE
+};
+
+uint32_t BMP180_GetVal(uint8_t mode);
 void BMP180_Init(void);
 
 #endif

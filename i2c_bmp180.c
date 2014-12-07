@@ -1,8 +1,6 @@
 /* reaper7 */
 
 #include <math.h>
-#include "osapi.h"
-#include "c_types.h"
 #include "driver/i2c.h"
 #include "driver/i2c_bmp180.h"
 
